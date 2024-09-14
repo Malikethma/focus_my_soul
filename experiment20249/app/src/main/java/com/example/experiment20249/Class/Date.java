@@ -7,62 +7,70 @@ import android.widget.TextView;
 import com.example.experiment20249.R;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Date {
-    private String TAG = "Date";
-    public String Year;
-    public String Month;
-    public String Day;
-    public String dayofWeek;//星期几
-    public LocalDateTime currentMonday;
+    private static final String TAG = "Date";
+    public static String year;
+    public static String month;
+    public static String day;
+    public static String currentTime;
+    public static LocalDate currentMonday;
+    public static ArrayList<LocalDate> weekList;//本周日期列表
+    public static int weekOffset;//距离本周偏移量
 
-    public ArrayList<LocalDateTime> weekList;//本周日期列表
-    public int weekOffset;//距离本周偏移量
+    static {
+        initialize();
+    }
 
-    public void getDate(){//获取当前时间
-
-        LocalDateTime currentDate = LocalDateTime.now();
-        Year = currentDate.format(DateTimeFormatter.ofPattern("yyyy"));
-        Month = currentDate.format(DateTimeFormatter.ofPattern("MM"));
-        Day = currentDate.format(DateTimeFormatter.ofPattern("dd"));
-        dayofWeek = dayinWeek_getChinese(currentDate.getDayOfWeek().toString());
+    public static void initialize(){
+        LocalDate currentDate = LocalDate.now();
+        currentTime = currentDate.toString();
+        String[] date = currentTime.split("-");
+        year = date[0];
+        month = date[1];
+        day = date[2];
         currentMonday = getStartofWeek(currentDate);//这一周周一的日期
         weekList = generateWeekDates(currentMonday);//本周日期列表
         weekOffset = 0;
-
-        Log.d(TAG, "Date: " + Year + "年" + Month + "月" + Day + "日" + dayofWeek);
-        Log.d(TAG, "Date: " + weekList.toString());
-
     }
 
-    public String getYear(){
-        getDate();
-        return Year;
+    public static String getYear(){
+        return year;
     }
-    public String getMonth(){
-        getDate();
-        return Month;
+    public static String getMonth(){
+        return month;
     }
-    public String getDay(){
-        getDate();
-        return Day;
+    public static String getDay(){
+        return day;
     }
 
-    public ArrayList<LocalDateTime> getWeekList(){
-        if(weekList == null || weekList.isEmpty()){
-            getDate();
+    public static String getCurrentTime(){
+        if (currentTime == null || !currentTime.equals(LocalDate.now().toString())) {
+            initialize();
         }
+        return currentTime;
+    }
+
+    public static LocalDate getCurrentMonday(){
+        return currentMonday;
+    }
+
+    public static ArrayList<LocalDate> getWeekList(){
         return weekList;
     }
-
-
-    public ArrayList<String> getWeekList_String(){
-        return generateWeekDateString(getWeekList());
+    public static ArrayList<String> getWeekListAsString() {
+        return generateWeekDatesString(weekList);
     }
-    public String dayinWeek_getChinese(String dayinWeek){
+
+    public static ArrayList<String> getWeekList_String(){
+        return generateWeekDatesString(getWeekList());
+    }
+    public static String dayinWeek_getChinese(String dayinWeek){
         switch (dayinWeek){
             case "MONDAY":
                 return "周一";
@@ -80,7 +88,7 @@ public class Date {
                 return "周天";
         }
     }
-    public LocalDateTime getStartofWeek(LocalDateTime date) {
+    public static LocalDate getStartofWeek(LocalDate date) {
         DayOfWeek dayOfWeek = date.getDayOfWeek();//获取当前日期是星期几
         int daysUntilMonday = dayOfWeek.getValue() - DayOfWeek.MONDAY.getValue();//计算当前日期到周一的天数
         if(daysUntilMonday < 0){
@@ -88,29 +96,29 @@ public class Date {
         }
         return date.minusDays(daysUntilMonday);//返回本周周一的日期
     }
-    public ArrayList<LocalDateTime> generateWeekDates(LocalDateTime date) {
-        ArrayList<LocalDateTime> weekDates = new ArrayList<>();
+    public static ArrayList<LocalDate> generateWeekDates(LocalDate date) {//生成本周日期列表
+        ArrayList<LocalDate> weekDates = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             weekDates.add(date.plusDays(i));
         }
         return weekDates;
     }
-    public ArrayList<String> generateWeekDateString(ArrayList<LocalDateTime> dates) {
+    public static ArrayList<String> generateWeekDatesString(ArrayList<LocalDate> dates) {//生成本周日期列表字符串形势
         ArrayList<String> weekDateString = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd");
-        for (LocalDateTime date : dates) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        for (LocalDate date : dates) {
             weekDateString.add(date.format(formatter));
         }
         return weekDateString;
     }
 
-    public void addWeek() {
+    public static void addWeek() {
         weekOffset++;
         currentMonday = currentMonday.plusWeeks(1);
         weekList = generateWeekDates(currentMonday);
     }
 
-    public void subtractWeek() {
+    public static void subtractWeek() {
         weekOffset--;
         currentMonday = currentMonday.minusWeeks(1);
         weekList = generateWeekDates(currentMonday);

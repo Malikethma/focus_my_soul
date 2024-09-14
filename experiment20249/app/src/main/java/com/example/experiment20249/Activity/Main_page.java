@@ -27,7 +27,7 @@ import com.example.experiment20249.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
 public class Main_page extends AppCompatActivity {
-    private Date date = new Date();
+    private static final String TAG = "Main_page";
     private RecyclerView main_page_recyclerView;
     private DateViewAdapter dateViewAdapter;
     private LinearLayoutManager linearLayoutManager;
@@ -46,10 +46,10 @@ public class Main_page extends AppCompatActivity {
     }
     
     private void initView() {
-        date.getDate();
+        Date.getCurrentTime();
         setPageFont();
         initRecyclerView();
-        setDate();
+        firstSetDate();
 
     }
     private void setPageFont(){//设置字体
@@ -71,16 +71,16 @@ public class Main_page extends AppCompatActivity {
         }
     }
     @SuppressLint("SetTextI18n")
-    private void setDate(){
+    private void firstSetDate(){
         main_page_date_year = findViewById(R.id.main_page_date_year);
         main_page_date_month_day = findViewById(R.id.main_page_date_month_day);
-        main_page_date_year.setText(date.getYear());
-        main_page_date_month_day.setText(date.getMonth()+"月"+date.getDay()+"日");
+        main_page_date_year.setText(Date.getYear());
+        main_page_date_month_day.setText(Date.getMonth()+"月"+Date.getDay()+"日");
     }
     private void initRecyclerView() {
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         main_page_recyclerView = findViewById(R.id.main_page_date_recycle_view);
-        dateViewAdapter = new DateViewAdapter(date.getWeekList_String());
+        dateViewAdapter = new DateViewAdapter(Date.getWeekList_String());
         main_page_recyclerView.setLayoutManager(linearLayoutManager);
         main_page_recyclerView.setAdapter(dateViewAdapter);
         main_page_recyclerView.setHasFixedSize(true);
@@ -106,12 +106,12 @@ public class Main_page extends AppCompatActivity {
                         // 当滚动停止时，重置滑动距离
                         if (scrollDirection == 1) {
                             // 向右滑动超过阈值
-                            date.addWeek();
+                            Date.addWeek();
                         } else if( scrollDirection == -1) {
                             // 向左滑动超过阈值
-                            date.subtractWeek();
+                            Date.subtractWeek();
                         }
-                        dateViewAdapter.updateData(date.getWeekList_String());
+                        dateViewAdapter.updateData(Date.getWeekList_String());
                         // 重置累积的滑动距离
                         totalDx = 0;
                         scrollDirection = 0;

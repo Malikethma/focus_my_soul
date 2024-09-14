@@ -15,6 +15,7 @@ import com.example.experiment20249.R;
 import java.util.ArrayList;
 
 public class DateViewHolder extends BaseViewHolder {
+    private static final String TAG = "DateViewHolder";
     public TextView dayView;
     public DateViewHolder(@NonNull View itemView, Typeface typeface) {
         super(itemView);
