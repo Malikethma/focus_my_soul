@@ -35,6 +35,9 @@ public class Main_page extends AppCompatActivity {
     private TextView main_page_date_year;
     private TextView main_page_date_month_day;
 
+    private static final int SCROLL_THRESHOLD = 1; // 滑动阈值，可以根据需要调整
+     // 记录上一次滑动的距离
+    private int scrollDirection = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +46,7 @@ public class Main_page extends AppCompatActivity {
     }
     
     private void initView() {
+        date.getDate();
         setPageFont();
         initRecyclerView();
         setDate();
@@ -76,28 +80,44 @@ public class Main_page extends AppCompatActivity {
     private void initRecyclerView() {
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         main_page_recyclerView = findViewById(R.id.main_page_date_recycle_view);
-        dateViewAdapter = new DateViewAdapter();
+        dateViewAdapter = new DateViewAdapter(date.getWeekList_String());
         main_page_recyclerView.setLayoutManager(linearLayoutManager);
         main_page_recyclerView.setAdapter(dateViewAdapter);
+        main_page_recyclerView.setHasFixedSize(true);
+        main_page_recyclerView.setItemViewCacheSize(7);
 
         main_page_recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
-            @SuppressLint("NotifyDataSetChanged")
+            private int totalDx = 0;
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(dx<0){
-                    date.setLastWeek();
-                    dateViewAdapter.weekDate = date.getWeekList_Last_String();
-                    dateViewAdapter.notifyDataSetChanged();
-                }
-                if(dx>0){
-                    date.setNextWeek();
-                    dateViewAdapter.weekDate = date.getWeekList_Next_String();
-                    dateViewAdapter.notifyDataSetChanged();
-
-                }
+                totalDx += dx;
+                if(dx >0){
+                    scrollDirection = 1;
+                }else if(dx <0){
+                    scrollDirection = -1;
                 }
             }
-        );
+            @Override
+            public void onScrollStateChanged (@NonNull RecyclerView recyclerView,int newState){
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if(Math.abs(totalDx)> SCROLL_THRESHOLD) {
+                        // 当滚动停止时，重置滑动距离
+                        if (scrollDirection == 1) {
+                            // 向右滑动超过阈值
+                            date.addWeek();
+                        } else if( scrollDirection == -1) {
+                            // 向左滑动超过阈值
+                            date.subtractWeek();
+                        }
+                        dateViewAdapter.updateData(date.getWeekList_String());
+                        // 重置累积的滑动距离
+                        totalDx = 0;
+                        scrollDirection = 0;
+                    }
+                }
+            }
+        });
     }
 }

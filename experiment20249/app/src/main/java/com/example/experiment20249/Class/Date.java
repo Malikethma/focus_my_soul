@@ -17,27 +17,25 @@ public class Date {
     public String Month;
     public String Day;
     public String dayofWeek;//星期几
-    private boolean isCurrentWeekCalculated = true;
-    private boolean isLastWeekCalculated = false;
-    private boolean isNextWeekCalculated = false;
+    public LocalDateTime currentMonday;
+
     public ArrayList<LocalDateTime> weekList;//本周日期列表
-    public ArrayList<LocalDateTime> weekList_Last;
-    public ArrayList<LocalDateTime> weekList_Next;
+    public int weekOffset;//距离本周偏移量
 
     public void getDate(){//获取当前时间
+
         LocalDateTime currentDate = LocalDateTime.now();
         Year = currentDate.format(DateTimeFormatter.ofPattern("yyyy"));
         Month = currentDate.format(DateTimeFormatter.ofPattern("MM"));
         Day = currentDate.format(DateTimeFormatter.ofPattern("dd"));
         dayofWeek = dayinWeek_getChinese(currentDate.getDayOfWeek().toString());
+        currentMonday = getStartofWeek(currentDate);//这一周周一的日期
+        weekList = generateWeekDates(currentMonday);//本周日期列表
+        weekOffset = 0;
 
-        LocalDateTime startofWeek = getStartofWeek(currentDate);//这一周周一的日期
-        weekList = generateWeekDates(startofWeek);//本周日期列表
-        weekList_Last = getLastWeek(weekList);
-        weekList_Next = getNextWeek(weekList);
+        Log.d(TAG, "Date: " + Year + "年" + Month + "月" + Day + "日" + dayofWeek);
+        Log.d(TAG, "Date: " + weekList.toString());
 
-        Log.d( TAG, "Date: " + Year + "年" + Month + "月" + Day + "日" + dayofWeek);
-        Log.d( TAG, "Date: " + weekList.toString());
     }
 
     public String getYear(){
@@ -53,39 +51,17 @@ public class Date {
         return Day;
     }
 
-    public boolean isLastWeekCalculated(){
-        return isLastWeekCalculated;
-    }
-
-    public boolean isNextWeekCalculated(){
-        return isCurrentWeekCalculated;
-    }
     public ArrayList<LocalDateTime> getWeekList(){
-        getDate();
+        if(weekList == null || weekList.isEmpty()){
+            getDate();
+        }
         return weekList;
     }
 
-    public ArrayList<LocalDateTime> getWeekList_Last(){
-        getDate();
-        return weekList_Last;
-    }
-    public ArrayList<LocalDateTime> getWeekList_Next(){
-        getDate();
-        return weekList_Next;
-    }
-    public ArrayList<String> getWeekList_String(){
-        getDate();
-        return generateWeekDateString(weekList);
-    }
-    public ArrayList<String> getWeekList_Last_String(){
-        getDate();
-        return generateWeekDateString(weekList_Last);
-    }
-    public ArrayList<String> getWeekList_Next_String(){
-        getDate();
-        return generateWeekDateString(weekList_Next);
-    }
 
+    public ArrayList<String> getWeekList_String(){
+        return generateWeekDateString(getWeekList());
+    }
     public String dayinWeek_getChinese(String dayinWeek){
         switch (dayinWeek){
             case "MONDAY":
@@ -127,47 +103,16 @@ public class Date {
         }
         return weekDateString;
     }
-    public ArrayList<LocalDateTime> getLastWeek(ArrayList<LocalDateTime> weekList){
-        ArrayList<LocalDateTime> lastWeekList = new ArrayList<>();
-        for(LocalDateTime date : weekList){
-            lastWeekList.add(date.minusDays(7));
-        }
-        return lastWeekList;
-    }
-    public ArrayList<LocalDateTime> getNextWeek(ArrayList<LocalDateTime> weekList){
-        ArrayList<LocalDateTime> nextWeekList = new ArrayList<>();
-        for(LocalDateTime date : weekList){
-            nextWeekList.add(date.plusDays(7));
-        }
-        return nextWeekList;
+
+    public void addWeek() {
+        weekOffset++;
+        currentMonday = currentMonday.plusWeeks(1);
+        weekList = generateWeekDates(currentMonday);
     }
 
-    public void setLastWeek(){
-        if(!isLastWeekCalculated){
-        weekList = getLastWeek(weekList);
-        weekList_Last = getLastWeek(weekList);
-        weekList_Next = getNextWeek(weekList);
-        isLastWeekCalculated = true;
-        isCurrentWeekCalculated = false;
-        isNextWeekCalculated = false;
-        }
-    }
-
-    public void setNextWeek(){
-        if(!isNextWeekCalculated){
-            weekList = getNextWeek(weekList);
-            weekList_Last = getLastWeek(weekList);
-            weekList_Next = getNextWeek(weekList);
-            isLastWeekCalculated = false;
-            isCurrentWeekCalculated = false;
-            isNextWeekCalculated = true;
-        }
-    }
-
-    private void RefreshDateAttributes(){
-        LocalDateTime currentDate = weekList.get(0);
-        Year = currentDate.format(DateTimeFormatter.ofPattern("yyyy"));
-        Month = currentDate.format(DateTimeFormatter.ofPattern("MM"));
-        Day = currentDate.format(DateTimeFormatter.ofPattern("dd"));
+    public void subtractWeek() {
+        weekOffset--;
+        currentMonday = currentMonday.minusWeeks(1);
+        weekList = generateWeekDates(currentMonday);
     }
 }

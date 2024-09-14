@@ -1,5 +1,6 @@
 package com.example.experiment20249.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
@@ -26,6 +27,10 @@ public class DateViewAdapter extends RecyclerView.Adapter<DateViewHolder>{
         weekDate=date.getWeekList_String();
     }
 
+    public DateViewAdapter(ArrayList<String> weekDate) {
+        this.weekDate = weekDate;
+    }
+
     @NonNull
     @Override
     public DateViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -49,4 +54,9 @@ public class DateViewAdapter extends RecyclerView.Adapter<DateViewHolder>{
         return weekDate.size();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateData(ArrayList<String> newWeekDate) {
+        weekDate = newWeekDate;
+        notifyDataSetChanged();
+    }
 }
