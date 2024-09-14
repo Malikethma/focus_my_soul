@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.experiment20249.Adapter.DateViewAdapter;
 import com.example.experiment20249.Class.Date;
+import com.example.experiment20249.Interface.OnItemSelectedListener;
 import com.example.experiment20249.R;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
@@ -33,10 +34,13 @@ public class Main_page extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
 
     private TextView main_page_date_year;
-    private TextView main_page_date_month_day;
+    private TextView main_page_date_month;
+    private TextView main_page_date_day;
+    private TextView main_page_date_yue;
+    private TextView main_page_date_ri;
 
     private static final int SCROLL_THRESHOLD = 1; // 滑动阈值，可以根据需要调整
-     // 记录上一次滑动的距离
+    private int totalDx = 0; // 记录上一次滑动的距离
     private int scrollDirection = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,7 @@ public class Main_page extends AppCompatActivity {
         setPageFont();
         initRecyclerView();
         firstSetDate();
+        setAdapterListener();
 
     }
     private void setPageFont(){//设置字体
@@ -57,11 +62,16 @@ public class Main_page extends AppCompatActivity {
             AssetManager assetManager = getAssets();
             Typeface Frizon = Typeface.createFromAsset(assetManager, "font/Frizon.ttf");
             Typeface huiwenmingchao = Typeface.createFromAsset(assetManager, "font/汇文明朝体.otf");
-
             main_page_date_year = findViewById(R.id.main_page_date_year);
-            main_page_date_month_day = findViewById(R.id.main_page_date_month_day);
+            main_page_date_month = findViewById(R.id.main_page_date_month);
+            main_page_date_day = findViewById(R.id.main_page_date_day);
+            main_page_date_yue = findViewById(R.id.main_page_date_yue);
+            main_page_date_ri = findViewById(R.id.main_page_date_ri);
             main_page_date_year.setTypeface(Frizon);
-            main_page_date_month_day.setTypeface(huiwenmingchao);
+            main_page_date_month.setTypeface(huiwenmingchao);
+            main_page_date_day.setTypeface(huiwenmingchao);
+            main_page_date_yue.setTypeface(huiwenmingchao);
+            main_page_date_ri.setTypeface(huiwenmingchao);
             for(int i = 1 ;i<=7;i++ ){
                 TextView textView = findViewById(getResources().getIdentifier("main_page_date_week"+i, "id", getPackageName()));
                 textView.setTypeface(huiwenmingchao);
@@ -73,9 +83,11 @@ public class Main_page extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void firstSetDate(){
         main_page_date_year = findViewById(R.id.main_page_date_year);
-        main_page_date_month_day = findViewById(R.id.main_page_date_month_day);
+        main_page_date_month = findViewById(R.id.main_page_date_month);
+        main_page_date_day = findViewById(R.id.main_page_date_day);
         main_page_date_year.setText(Date.getYear());
-        main_page_date_month_day.setText(Date.getMonth()+"月"+Date.getDay()+"日");
+        main_page_date_month.setText(Date.getMonth());
+        main_page_date_day.setText(Date.getDay());
     }
     private void initRecyclerView() {
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -111,12 +123,29 @@ public class Main_page extends AppCompatActivity {
                             // 向左滑动超过阈值
                             Date.subtractWeek();
                         }
-                        dateViewAdapter.updateData(Date.getWeekList_String());
+                        dateViewAdapter.refreshData();
                         // 重置累积的滑动距离
                         totalDx = 0;
                         scrollDirection = 0;
                     }
                 }
+            }
+        });
+    }
+    private void setAdapterListener(){
+        dateViewAdapter.setOnItemSelected(new OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(int position) {
+                String selectedDate = Date.getWeekList().get(position).toString();
+                Log.d(TAG, "Selected date: " + selectedDate);
+                String year = selectedDate.substring(0,4);
+                String month = selectedDate.substring(5,7);
+                String day = selectedDate.substring(8);
+                main_page_date_year.setText(year);
+                main_page_date_month.setText(month);
+                main_page_date_day.setText(day);
+
             }
         });
     }

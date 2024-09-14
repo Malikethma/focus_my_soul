@@ -51,15 +51,45 @@
         app:layout_constraintLeft_toRightOf="@id/main_page_user_card"
         />
     <TextView
-        android:id="@+id/main_page_date_month_day"
+        android:id="@+id/main_page_date_month"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="01月01日"
+        android:text="01"
         android:textSize="25sp"
         android:textColor="@color/black"
         android:layout_marginLeft="10dp"
         app:layout_constraintTop_toBottomOf="@id/main_page_date_year"
         app:layout_constraintLeft_toRightOf="@id/main_page_user_card"
+        />
+    <TextView
+        android:id="@+id/main_page_date_yue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="月"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/main_page_date_year"
+        app:layout_constraintLeft_toRightOf="@+id/main_page_date_month"
+        />
+    <TextView
+        android:id="@+id/main_page_date_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="01"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/main_page_date_year"
+        app:layout_constraintLeft_toRightOf="@+id/main_page_date_yue"
+        />
+    <TextView
+        android:id="@+id/main_page_date_ri"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="日"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/main_page_date_year"
+        app:layout_constraintLeft_toRightOf="@+id/main_page_date_day"
         />
     <TextView
         android:id="@+id/main_page_date_week1"
@@ -70,7 +100,7 @@
         android:textColor="@color/black"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/main_page_date_month_day"
+        app:layout_constraintTop_toBottomOf="@id/main_page_date_month"
         app:layout_constraintLeft_toLeftOf="parent"
     />
     <TextView
@@ -82,7 +112,7 @@
         android:textColor="@color/black"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/main_page_date_month_day"
+        app:layout_constraintTop_toBottomOf="@id/main_page_date_month"
         app:layout_constraintLeft_toRightOf="@id/main_page_date_week1"
         app:layout_constraintRight_toLeftOf="@id/main_page_date_week3"
         />
@@ -95,7 +125,7 @@
         android:textColor="@color/black"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/main_page_date_month_day"
+        app:layout_constraintTop_toBottomOf="@id/main_page_date_month"
         app:layout_constraintLeft_toRightOf="@id/main_page_date_week2"
         app:layout_constraintRight_toLeftOf="@id/main_page_date_week4"
     />
@@ -108,7 +138,7 @@
         android:textColor="@color/black"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/main_page_date_month_day"
+        app:layout_constraintTop_toBottomOf="@id/main_page_date_month"
         app:layout_constraintLeft_toRightOf="@id/main_page_date_week3"
         app:layout_constraintRight_toLeftOf="@id/main_page_date_week5"
     />
@@ -121,7 +151,7 @@
         android:textColor="@color/black"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/main_page_date_month_day"
+        app:layout_constraintTop_toBottomOf="@id/main_page_date_month"
         app:layout_constraintLeft_toRightOf="@id/main_page_date_week4"
         app:layout_constraintRight_toLeftOf="@id/main_page_date_week6"
     />
@@ -134,7 +164,7 @@
         android:textColor="@color/black"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/main_page_date_month_day"
+        app:layout_constraintTop_toBottomOf="@id/main_page_date_month"
         app:layout_constraintLeft_toRightOf="@id/main_page_date_week5"
         app:layout_constraintRight_toLeftOf="@id/main_page_date_week7"
     />
@@ -147,7 +177,7 @@
         android:textColor="@color/black"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/main_page_date_month_day"
+        app:layout_constraintTop_toBottomOf="@id/main_page_date_month"
         app:layout_constraintLeft_toRightOf="@id/main_page_date_week6"
         app:layout_constraintRight_toRightOf="parent"
     />

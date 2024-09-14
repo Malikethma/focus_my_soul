@@ -63,9 +63,6 @@ public class Date {
     public static ArrayList<LocalDate> getWeekList(){
         return weekList;
     }
-    public static ArrayList<String> getWeekListAsString() {
-        return generateWeekDatesString(weekList);
-    }
 
     public static ArrayList<String> getWeekList_String(){
         return generateWeekDatesString(getWeekList());
